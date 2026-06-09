@@ -269,11 +269,10 @@ const TIPS = {
 ```
 git add index.html style.css data.js app.js
 git commit -m "..."
-git push origin master
+git push origin main
 ```
 
-このアプリはGitHub Pages等の静的ホスティングでそのまま公開可能。
-4ファイルをそのままアップロードするだけで動作する。
+`main` へのプッシュをトリガーに `.github/workflows/deploy.yml` が自動実行され、GitHub Pages に反映される。
 
 ---
 
@@ -281,21 +280,22 @@ git push origin master
 
 1. 変更を実施する
 2. 変更内容を `CLAUDE.md` に反映させる
-3. GitHub にコミット・プッシュする
+3. GitHub にコミット・プッシュする（**`main` ブランチへ**）
 
 ```
 git add index.html style.css data.js app.js CLAUDE.md
 git commit -m "変更内容の要約"
-git push origin master
+git push origin main
 ```
 
 ---
 
 ## ブランチ運用ルール
 
-- **プッシュは必ず `master` ブランチに行う**
-- GitHub Pages は `master` ブランチを配信しているため、`main` だけにプッシュしても反映されない
-- コマンド例：`git push origin master` または `git push origin main:master`
+- **プッシュは `main` ブランチに行う**
+- GitHub Pages は GitHub Actions（`.github/workflows/deploy.yml`）経由でデプロイされる
+- `main` へのプッシュが自動デプロイのトリガーになる
+- `master` ブランチへのプッシュは不要
 
 ---
 
