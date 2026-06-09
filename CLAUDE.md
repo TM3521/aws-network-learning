@@ -269,7 +269,7 @@ const TIPS = {
 ```
 git add index.html style.css data.js app.js
 git commit -m "..."
-git push origin main
+git push origin master
 ```
 
 このアプリはGitHub Pages等の静的ホスティングでそのまま公開可能。
