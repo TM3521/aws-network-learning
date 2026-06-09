@@ -652,6 +652,71 @@ const DEV_READ = [
     <strong>NAT Gateway</strong>はフォワードプロキシと同様に、プライベートサブネットのEC2がインターネットに出る際の「代理役」として機能します。
     </div>
   `},
+  {id:'dr-10',icon:'🖥️',title:'⑩ サーバーとは何か',lead:'「リクエストを受け取ってレスポンスを返す」専用コンピューターの仕組みを解説します',html:`
+    <p class="a-p"><span class="term" data-term="server">サーバー</span>とは、ネットワーク上で他のコンピューター（クライアント）からの要求を受け取り、処理結果を返す役割を担うコンピューターまたはソフトウェアです。私たちが日常的にWebサイトを閲覧したりメールを送ったりできるのは、どこかでサーバーが24時間動き続けているからです。</p>
+    <div class="analogy"><div class="analogy-lbl">💡 わかりやすい例え</div>レストランに例えると、お客さん（クライアント）が注文（リクエスト）を出し、キッチン（サーバー）が料理（レスポンス）を作って届けます。お客さんはキッチンの中身を知らなくても料理を受け取れます。サーバーも同様に、処理の詳細をクライアントに隠しながらサービスを提供します。</div>
+
+    <div class="a-h3">クライアントとサーバーの関係</div>
+    <table class="tbl"><tr><th></th><th><span class="term" data-term="client">クライアント</span></th><th><span class="term" data-term="server">サーバー</span></th></tr>
+    <tr><td>役割</td><td>サービスを要求する側</td><td>サービスを提供する側</td></tr>
+    <tr><td>例</td><td>Webブラウザ・スマホアプリ</td><td>WebサーバーやDBサーバー</td></tr>
+    <tr><td>動作</td><td>必要なときだけ起動・操作</td><td>常時稼働してリクエストを待つ</td></tr>
+    <tr><td>スペック</td><td>一般的なPC・スマホで十分</td><td>高いCPU・メモリ・ストレージが必要</td></tr></table>
+
+    <div class="a-h3">サーバーの種類（役割別）</div>
+    <p class="a-p">「サーバー」は特定の機種ではなく<strong>役割の名前</strong>です。同じコンピューターでも担う役割によって呼び方が変わります。</p>
+    <table class="tbl"><tr><th>種類</th><th>役割</th><th>使うプロトコル</th><th>AWS相当</th></tr>
+    <tr><td><strong>Webサーバー</strong></td><td>HTMLや画像などWebコンテンツを返す</td><td>HTTP / HTTPS（80・443番）</td><td>EC2 + Apache/Nginx</td></tr>
+    <tr><td><strong>アプリケーションサーバー</strong></td><td>ビジネスロジックを処理してデータを返す</td><td>HTTP / 独自プロトコル</td><td>EC2 / Lambda / ECS</td></tr>
+    <tr><td><strong>データベースサーバー</strong></td><td>データの保存・検索・更新を担う</td><td>3306（MySQL）/ 5432（PostgreSQL）</td><td>RDS / DynamoDB</td></tr>
+    <tr><td><strong>DNSサーバー</strong></td><td>ドメイン名をIPアドレスに変換する</td><td>DNS（53番）</td><td>Route 53</td></tr>
+    <tr><td><strong>メールサーバー</strong></td><td>メールの送受信・保管を行う</td><td>SMTP（25番）/ IMAP（143番）</td><td>Amazon SES</td></tr>
+    <tr><td><strong>ファイルサーバー</strong></td><td>ファイルを保存・共有する</td><td>SMB / FTP / NFS</td><td>Amazon S3 / EFS</td></tr>
+    <tr><td><strong>プロキシサーバー</strong></td><td>クライアントとサーバーの中継役</td><td>HTTP / HTTPS</td><td>ALB / CloudFront</td></tr></table>
+
+    <div class="a-h3">Webサーバーが返すまでの流れ</div>
+    <p class="a-p">ブラウザで <span class="kw">https://example.com</span> を開いたとき、裏側では次のような通信が行われています。</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-body"><div class="step-t">ブラウザが DNS でIPを調べる</div><div class="step-d">example.com のIPアドレスを DNS サーバーに問い合わせる。結果（例：93.184.216.34）がキャッシュに保存される</div></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-body"><div class="step-t">TCPコネクション確立（3ウェイハンドシェイク）</div><div class="step-d">ブラウザとWebサーバーが SYN / SYN-ACK / ACK を交わし、信頼性のある通信路を確立する</div></div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-body"><div class="step-t">TLS ハンドシェイク（HTTPS の場合）</div><div class="step-d">証明書を確認して暗号化の共通鍵を交換。これ以降の通信はすべて暗号化される</div></div></div>
+      <div class="step"><div class="step-n">4</div><div class="step-body"><div class="step-t">HTTP リクエストを送信</div><div class="step-d">ブラウザが「GET / HTTP/1.1」のようなリクエストをWebサーバーに送る</div></div></div>
+      <div class="step"><div class="step-n">5</div><div class="step-body"><div class="step-t">Webサーバーがリクエストを処理</div><div class="step-d">静的ファイルならそのまま返す。動的コンテンツならアプリサーバーやDBに問い合わせて結果を組み立てる</div></div></div>
+      <div class="step"><div class="step-n">6</div><div class="step-body"><div class="step-t">HTTP レスポンスを返す</div><div class="step-d">ステータスコード（200 OK など）と HTML・画像などのコンテンツをブラウザに返す</div></div></div>
+    </div>
+
+    <div class="a-h3">主要なWebサーバーソフトウェア</div>
+    <table class="tbl"><tr><th>ソフトウェア</th><th>特徴</th><th>向いている用途</th></tr>
+    <tr><td><strong>Apache</strong></td><td>歴史が長く実績豊富。モジュールで機能拡張が容易</td><td>汎用Webホスティング</td></tr>
+    <tr><td><strong>Nginx（エンジンエックス）</strong></td><td>軽量・高速。大量の同時接続に強い。リバースプロキシとしても使われる</td><td>高トラフィックサイト・APIサーバー前段</td></tr></table>
+
+    <div class="a-h3">物理サーバーと仮想サーバーの違い</div>
+    <table class="tbl"><tr><th></th><th>物理サーバー</th><th>仮想サーバー（VM）</th></tr>
+    <tr><td>実体</td><td>実際のハードウェア1台</td><td>ハードウェア上に作られたソフトウェア的なサーバー</td></tr>
+    <tr><td>コスト</td><td>購入費・維持費が高い</td><td>必要な分だけ使って従量課金</td></tr>
+    <tr><td>起動速度</td><td>数分〜十数分かかる</td><td>数十秒〜数分で起動</td></tr>
+    <tr><td>柔軟性</td><td>スペック変更にハード作業が必要</td><td>コンソールから数クリックで変更</td></tr>
+    <tr><td>AWSの例</td><td>オンプレミスのラックサーバー</td><td>Amazon EC2 インスタンス</td></tr></table>
+
+    <div class="a-h3">HTTPステータスコード早見表</div>
+    <p class="a-p">サーバーはレスポンスの先頭に<strong>ステータスコード</strong>を付けて処理結果を伝えます。</p>
+    <table class="tbl"><tr><th>コード</th><th>意味</th><th>場面</th></tr>
+    <tr><td><span class="kw">200 OK</span></td><td>成功</td><td>ページが正常に返された</td></tr>
+    <tr><td><span class="kw">301 Moved Permanently</span></td><td>恒久リダイレクト</td><td>HTTPからHTTPSへの転送など</td></tr>
+    <tr><td><span class="kw">400 Bad Request</span></td><td>不正なリクエスト</td><td>クライアント側の書式ミス</td></tr>
+    <tr><td><span class="kw">403 Forbidden</span></td><td>アクセス禁止</td><td>権限がないリソースへのアクセス</td></tr>
+    <tr><td><span class="kw">404 Not Found</span></td><td>リソースが存在しない</td><td>URLが間違っている</td></tr>
+    <tr><td><span class="kw">500 Internal Server Error</span></td><td>サーバー内部エラー</td><td>アプリのバグや設定ミス</td></tr>
+    <tr><td><span class="kw">503 Service Unavailable</span></td><td>サービス利用不可</td><td>過負荷・メンテナンス中</td></tr></table>
+
+    <div class="tip"><div class="tip-lbl">☁️ AWSとサーバーの関係</div>
+    AWSを使うとサーバーの管理負荷を大幅に減らせます。<br>
+    <strong>Amazon EC2</strong>：仮想サーバーをクラウドで借りる。OSから自分で管理するため自由度が高い（IaaS）。<br>
+    <strong>AWS Lambda</strong>：サーバーを意識しないサーバーレス。コードだけ書けばAWSがサーバーを調達・管理する。<br>
+    <strong>Amazon RDS</strong>：DBサーバーのマネージドサービス。バックアップ・パッチ・フェイルオーバーをAWSが代行する。<br>
+    クラウド移行とはつまり「物理サーバーの購入・管理をやめ、必要なサーバー機能をAWSのサービスとして借りる」ことです。
+    </div>
+  `},
   {id:'dr-8',icon:'🏗️',title:'⑧ 機器の組み合わせ方',lead:'実際のネットワークは複数の機器を組み合わせて作られています',html:`
     <p class="a-p">ここまで学んだ機器が、実際の家庭・オフィス・データセンターではどう組み合わされているか見てみましょう。</p>
     <div class="a-h3">家庭のネットワーク構成</div>
@@ -734,4 +799,6 @@ const TERMS = {
   latency:    {w:'レイテンシー（遅延）', b:'データを送ってから返ってくるまでの<strong>時間的な遅れ</strong>。「ping値」とも呼ばれる。単位はms（ミリ秒）。動画は帯域幅が重要、ゲームはレイテンシーが重要というように用途によって求められる性能が異なる。'},
   gateway:    {w:'デフォルトゲートウェイ', b:'LAN内の機器が<strong>外部ネットワーク（インターネット）に出るときの出口</strong>となる機器のIPアドレス。通常は家庭のルーターがデフォルトゲートウェイになる。宛先IPがLAN外の場合、パケットはまずここへ送られる。'},
   proxy:      {w:'プロキシサーバー',   b:'クライアントとサーバーの間に立って通信を<strong>代理で中継</strong>するサーバー。クライアント側に置く「フォワードプロキシ」とサーバー側に置く「リバースプロキシ」がある。キャッシュ・フィルタリング・負荷分散・セキュリティ強化などに活用される。'},
+  server:     {w:'サーバー',          b:'ネットワーク上で他のコンピューター（クライアント）からのリクエストを受け取り、処理結果（レスポンス）を返すコンピューターまたはソフトウェア。役割によってWebサーバー・DBサーバー・メールサーバーなどに分類される。AWSではEC2が仮想サーバーに相当する。'},
+  client:     {w:'クライアント',      b:'サーバーにサービスを<strong>要求する側</strong>のコンピューターやアプリケーション。Webブラウザはクライアントの代表例で、WebサーバーにHTTPリクエストを送りHTMLを受け取る。'},
 };
