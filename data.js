@@ -296,6 +296,104 @@ const NET_READ = [
     </div>
     <div class="tip"><div class="tip-lbl">🎯 次のステップ</div>ネットワーク基礎が理解できたら「📖 AWS入門」へ！AWSはこれらの技術をクラウド上で提供しています。</div>
   `},
+  {id:'nr-8',icon:'🔁',title:'⑨ VPN（仮想プライベートネットワーク）',lead:'インターネット上に「見えないトンネル」を掘って安全に通信する技術です',html:`
+    <p class="a-p"><span class="term" data-term="vpn">VPN（Virtual Private Network）</span>は、公共のインターネット上に暗号化されたトンネルを作り、あたかも専用回線でつながっているかのように安全に通信できる技術です。テレワークや拠点間接続に広く使われています。</p>
+    <div class="analogy"><div class="analogy-lbl">💡 わかりやすい例え</div>VPNは「透明な防弾ガラスのトンネル」です。外から中は見えず、通る人（データ）は完全に保護されています。公共の道路（インターネット）を使いながら、外部には内容が一切わかりません。</div>
+
+    <div class="a-h3">VPNの2つの種類</div>
+    <table class="tbl"><tr><th>種類</th><th>用途</th><th>仕組み</th><th>AWS相当</th></tr>
+    <tr><td><strong>サイト間VPN</strong>（Site-to-Site）</td><td>本社と支社など拠点間を常時接続</td><td>各拠点のVPNルーター同士がトンネルを確立</td><td>AWS Site-to-Site VPN</td></tr>
+    <tr><td><strong>クライアントVPN</strong>（リモートアクセス）</td><td>テレワーク中のPCを会社ネットに接続</td><td>PC上のVPNクライアントがサーバーにトンネル接続</td><td>AWS Client VPN</td></tr></table>
+
+    <div class="a-h3">VPNが通信を守る仕組み</div>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-body"><div class="step-t">トンネルの確立</div><div class="step-d">VPNクライアント（PC）とVPNサーバーが認証し合い、暗号化されたトンネルを作る</div></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-body"><div class="step-t">データの暗号化</div><div class="step-d">送信するデータをAESなどで暗号化してから、トンネルを通して送る</div></div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-body"><div class="step-t">カプセル化</div><div class="step-d">元のパケットを別のパケットで包む（カプセル化）。宛先はVPNサーバーになり、実際の通信先は外から見えない</div></div></div>
+      <div class="step"><div class="step-n">4</div><div class="step-body"><div class="step-t">復号して転送</div><div class="step-d">VPNサーバーが受け取ったパケットを復号し、社内ネットワークの本来の宛先に転送する</div></div></div>
+    </div>
+
+    <div class="a-h3">主なVPNプロトコル</div>
+    <table class="tbl"><tr><th>プロトコル</th><th>特徴</th><th>使われる場面</th></tr>
+    <tr><td><strong>IPsec</strong></td><td>標準的・高セキュリティ。企業のサイト間VPNで主流</td><td>拠点間VPN・AWS Site-to-Site VPN</td></tr>
+    <tr><td><strong>OpenVPN</strong></td><td>オープンソース。SSL/TLSベースで柔軟性が高い</td><td>リモートアクセスVPN</td></tr>
+    <tr><td><strong>WireGuard</strong></td><td>新しい・軽量・高速。コードが少なく監査しやすい</td><td>モダンなクライアントVPN</td></tr></table>
+
+    <div class="tip"><div class="tip-lbl">☁️ AWSでのVPN活用</div>
+    <strong>AWS Site-to-Site VPN</strong>：オンプレミスのデータセンターとAWS VPCをIPsecで接続。Direct Connectより安価に拠点間を接続できる。<br><br>
+    <strong>AWS Client VPN</strong>：在宅勤務の社員がVPC内のリソースに安全にアクセスするためのマネージドVPNサービス。<br><br>
+    <strong>AWS Direct Connect</strong>：VPNではなく物理専用線でオンプレとAWSを接続。より安定・高速だがコストが高い。
+    </div>
+  `},
+  {id:'nr-9',icon:'🔐',title:'⑩ 暗号化の基礎（TLS・公開鍵・共通鍵）',lead:'「鍵」を使ってデータを読めない形に変換し、盗み見を防ぐ仕組みです',html:`
+    <p class="a-p">暗号化とは、データを特定の「鍵」を使って第三者が読めない形に変換する技術です。ネットワーク上を流れるデータは傍受される可能性があるため、重要な情報は暗号化して送受信します。</p>
+    <div class="analogy"><div class="analogy-lbl">💡 わかりやすい例え</div>暗号化は「鍵のかかった金庫」です。金庫（暗号化されたデータ）を盗まれても、鍵（復号鍵）がなければ中身を取り出せません。</div>
+
+    <div class="a-h3">共通鍵暗号（対称暗号）</div>
+    <p class="a-p">暗号化と復号に<strong>同じ鍵</strong>を使う方式です。高速で大量データの暗号化に向いています。</p>
+    <table class="tbl"><tr><th>特徴</th><th>詳細</th></tr>
+    <tr><td>速度</td><td>◎ 高速。大量データの暗号化に適している</td></tr>
+    <tr><td>鍵の管理</td><td>△ 送受信者が同じ鍵を持つ必要がある。鍵の受け渡しが課題</td></tr>
+    <tr><td>代表アルゴリズム</td><td>AES（現在の標準）</td></tr>
+    <tr><td>用途</td><td>ファイルの暗号化・通信データ本体の暗号化（TLS後半）</td></tr></table>
+
+    <div class="a-h3">公開鍵暗号（非対称暗号）</div>
+    <p class="a-p">暗号化と復号に<strong>異なる2つの鍵（公開鍵・秘密鍵）</strong>を使う方式です。公開鍵は誰でも入手でき、それで暗号化したデータは秘密鍵でしか復号できません。</p>
+    <div class="analogy"><div class="analogy-lbl">💡 わかりやすい例え</div>公開鍵は「誰でも入れる郵便受けの投入口」、秘密鍵は「その郵便受けを開ける鍵」です。誰でも手紙を投入できますが、取り出せるのは持ち主だけです。</div>
+    <table class="tbl"><tr><th>特徴</th><th>詳細</th></tr>
+    <tr><td>速度</td><td>△ 低速。少量データの暗号化・鍵交換に使う</td></tr>
+    <tr><td>鍵の管理</td><td>◎ 公開鍵は公開してよい。秘密鍵だけ厳密に管理すればよい</td></tr>
+    <tr><td>代表アルゴリズム</td><td>RSA・楕円曲線暗号（ECDSA）</td></tr>
+    <tr><td>用途</td><td>TLSの鍵交換・デジタル署名・SSHログイン</td></tr></table>
+
+    <div class="a-h3">TLS ハンドシェイク — HTTPS通信が始まるまで</div>
+    <p class="a-p">HTTPSは「公開鍵暗号で安全に鍵を交換してから、高速な共通鍵暗号で通信する」という2段階の仕組みです。</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-body"><div class="step-t">サーバーが証明書を送る</div><div class="step-d">サーバーは「SSL証明書（公開鍵＋認証局の署名）」をクライアントに送る</div></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-body"><div class="step-t">クライアントが証明書を検証</div><div class="step-d">信頼できる認証局（CA）が署名しているか確認。偽サーバーへの接続を防ぐ</div></div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-body"><div class="step-t">共通鍵を安全に交換</div><div class="step-d">公開鍵暗号を使って、この通信専用の「セッション鍵（共通鍵）」を安全に共有する</div></div></div>
+      <div class="step"><div class="step-n">4</div><div class="step-body"><div class="step-t">共通鍵で暗号化通信</div><div class="step-d">以降のHTTP通信はセッション鍵で暗号化。高速かつ安全に通信できる</div></div></div>
+    </div>
+
+    <div class="a-h3">デジタル証明書と認証局（CA）</div>
+    <p class="a-p">「このサーバーは本物か」を証明するのが<strong>SSL証明書</strong>です。信頼できる第三者機関（<strong>認証局：CA</strong>）が発行・署名します。ブラウザにはあらかじめ信頼できるCAのリストが組み込まれています。</p>
+    <div class="tip"><div class="tip-lbl">☁️ AWSでの暗号化</div>
+    <strong>ACM（AWS Certificate Manager）</strong>：HTTPS用のSSL証明書を無料で発行・管理。CloudFrontやALBにワンクリックで適用できる。<br><br>
+    <strong>AWS KMS（Key Management Service）</strong>：暗号化キーの作成・管理を行うマネージドサービス。S3・EBS・RDSのデータ暗号化に使われる。<br><br>
+    <strong>S3のサーバーサイド暗号化</strong>：S3に保存するデータをAWSが自動で暗号化。鍵管理はKMSに任せられる。
+    </div>
+  `},
+  {id:'nr-10',icon:'🗂️',title:'⑪ VLAN とサブネット設計',lead:'ネットワークを論理的に分割して、セキュリティと管理性を高める技術です',html:`
+    <p class="a-p">大きなネットワークをそのまま使うと、通信が全体に広がり管理が難しくなります。<strong>VLAN</strong>と<strong>サブネット</strong>はネットワークを小さく分割する2つの技術で、それぞれ異なる層で機能します。</p>
+
+    <div class="a-h3">VLAN（Virtual LAN）とは</div>
+    <p class="a-p">物理的な配線を変えずに、スイッチの設定だけでLANを<strong>論理的に分割</strong>できる技術です。同じスイッチにつながっていても、VLANが異なれば直接通信できません。</p>
+    <div class="analogy"><div class="analogy-lbl">💡 わかりやすい例え</div>オフィスの「フロアの壁」のようなものです。同じビル（スイッチ）の中でも、フロア（VLAN）が違えば直接行き来できません。フロア間を移動するにはエレベーター（ルーター）が必要です。</div>
+    <table class="tbl"><tr><th>VLANを分ける理由</th><th>説明</th></tr>
+    <tr><td>🔒 セキュリティ</td><td>部門ごとに分離。経理VLANと開発VLANを分ければ情報漏洩リスクを軽減</td></tr>
+    <tr><td>📶 ブロードキャスト制御</td><td>ARPなどのブロードキャストをVLAN内に閉じ込め、ネットワーク全体の負荷を軽減</td></tr>
+    <tr><td>🏗️ 柔軟な構成</td><td>物理配線を変えずに論理的にネットワーク構成を変更できる</td></tr></table>
+
+    <div class="a-h3">サブネットとCIDR表記</div>
+    <p class="a-p">IPアドレスの範囲を指定する表記が<strong>CIDR（サイダー）</strong>です。<span class="kw">10.0.0.0/24</span> の「/24」がプレフィックス長で、ネットワーク部のビット数を表します。</p>
+    <table class="tbl"><tr><th>CIDR</th><th>使用可能ホスト数</th><th>用途例</th></tr>
+    <tr><td><span class="kw">/16</span>（例：10.0.0.0/16）</td><td>65,534台</td><td>VPC全体のアドレス範囲</td></tr>
+    <tr><td><span class="kw">/24</span>（例：10.0.1.0/24）</td><td>254台</td><td>サブネット1つ分</td></tr>
+    <tr><td><span class="kw">/28</span>（例：10.0.1.0/28）</td><td>14台</td><td>小規模サブネット</td></tr></table>
+
+    <div class="a-h3">AWSでのサブネット設計パターン</div>
+    <p class="a-p">AWSのVPCでは、役割ごとにサブネットを分けるのが基本です。</p>
+    <table class="tbl"><tr><th>サブネット</th><th>配置するリソース</th><th>インターネット接続</th></tr>
+    <tr><td><strong>パブリックサブネット</strong>（/24）</td><td>ALB・NAT Gateway・踏み台EC2</td><td>IGW経由で可能</td></tr>
+    <tr><td><strong>プライベートサブネット（アプリ）</strong>（/24）</td><td>EC2・ECS・Lambda</td><td>NAT Gateway経由のみ</td></tr>
+    <tr><td><strong>プライベートサブネット（DB）</strong>（/24）</td><td>RDS・ElastiCache</td><td>不可（完全隔離）</td></tr></table>
+
+    <div class="tip"><div class="tip-lbl">💡 設計のポイント</div>
+    ①<strong>最初に広いCIDRを確保する</strong>：VPCは後からアドレス範囲を変更できないため、将来の拡張を見越して /16 程度を取得する。<br>
+    ②<strong>複数AZにサブネットを配置する</strong>：高可用性のために、同じ役割のサブネットを2つ以上のAZに作る（例：パブリックサブネットをAZ-aとAZ-cの両方に）。<br>
+    ③<strong>DBサブネットは完全隔離</strong>：データベースはインターネットと切り離したプライベートサブネットに置き、アプリサーバーからのみアクセスを許可する。
+    </div>
+  `},
 ];
 
 const AWS_READ = [
@@ -547,6 +645,106 @@ const AWS_READ = [
     <tr><td>フェイルオーバー</td><td>プライマリが落ちたら自動でセカンダリへ</td><td>DR（災害復旧）</td></tr>
     <tr><td>地理的（Geolocation）</td><td>ユーザーの場所でルーティング先を変える</td><td>地域限定コンテンツ配信</td></tr></table>
     <div class="tip"><div class="tip-lbl">🎯 次のステップ</div>AWS入門ガイドを読み終えたら、<strong>🗂️ フラッシュカード</strong>→<strong>🗺️ 構成図</strong>→<strong>🎯 クイズ</strong>の順で理解を深めましょう！</div>
+  `},
+  {id:'ar-12',icon:'📨',title:'⑫ メッセージキューと通知 — SQS & SNS',lead:'サービス同士を疎に結合して、障害に強い非同期アーキテクチャを作る仕組みです',html:`
+    <p class="a-p">複数のサービスが直接連携すると、1つが止まると全体が止まります。<strong>メッセージキュー</strong>を間に挟むことで、サービスを独立させて障害耐性を高められます。AWSには<strong>SQS</strong>（キュー）と<strong>SNS</strong>（通知）の2つのサービスがあります。</p>
+    <div class="analogy"><div class="analogy-lbl">💡 わかりやすい例え</div>SQSは「注文票の伝票ボックス」です。フロント（送信者）が伝票を入れ、キッチン（受信者）は自分のペースで取り出して処理します。キッチンが混んでいても伝票はたまるだけで、注文は失われません。</div>
+
+    <div class="a-h3">Amazon SQS — メッセージキュー</div>
+    <p class="a-p">SQS（Simple Queue Service）は、送信者が入れたメッセージを受信者が取り出して処理するキューサービスです。送信者と受信者が同時に動いている必要がないため<strong>非同期処理</strong>が実現できます。</p>
+    <table class="tbl"><tr><th></th><th>スタンダードキュー</th><th>FIFOキュー</th></tr>
+    <tr><td>順序</td><td>保証なし（ほぼ順番通り）</td><td>厳密に順序を保証（First In First Out）</td></tr>
+    <tr><td>スループット</td><td>無制限（毎秒数万件）</td><td>毎秒300件（バッチで3,000件）</td></tr>
+    <tr><td>重複</td><td>まれに重複あり</td><td>重複なし（Exactly-once）</td></tr>
+    <tr><td>用途</td><td>画像処理・ログ収集など順序不問の大量処理</td><td>決済・在庫更新など順序が重要な処理</td></tr></table>
+
+    <div class="a-h3">Amazon SNS — 通知サービス（Pub/Sub）</div>
+    <p class="a-p">SNS（Simple Notification Service）は<strong>1対多の通知</strong>を行うサービスです。「トピック」に向けてメッセージを発行すると、購読しているすべての宛先に同時に配信されます（Pub/Subモデル）。</p>
+    <div class="analogy"><div class="analogy-lbl">💡 わかりやすい例え</div>SNSは「館内放送」です。放送室（発行者）がマイクで話すと、館内のすべてのスピーカー（購読者）に同時に届きます。特定の人だけに届けるSQSとは異なり、複数の宛先に一斉配信します。</div>
+    <table class="tbl"><tr><th>配信先（サブスクライバー）</th><th>用途</th></tr>
+    <tr><td>SQSキュー</td><td>複数のキューに同時にメッセージを配信（SNS→SQSのファンアウト）</td></tr>
+    <tr><td>Lambda関数</td><td>イベント発生時に複数のLambdaを並列起動</td></tr>
+    <tr><td>メールアドレス</td><td>CloudWatchアラームのメール通知</td></tr>
+    <tr><td>HTTPエンドポイント</td><td>外部WebhookへのPUSH通知</td></tr></table>
+
+    <div class="a-h3">SQS と SNS の使い分け</div>
+    <table class="tbl"><tr><th></th><th>SQS</th><th>SNS</th></tr>
+    <tr><td>配信先</td><td>1つのキュー（1対1）</td><td>複数の宛先（1対多）</td></tr>
+    <tr><td>処理タイミング</td><td>受信者が自分のペースで取り出す</td><td>発行と同時に全購読者に配信</td></tr>
+    <tr><td>メッセージ保持</td><td>最大14日間保持</td><td>保持しない（配信即時）</td></tr>
+    <tr><td>典型的な用途</td><td>画像リサイズ・バッチ処理の分散</td><td>アラート通知・ファンアウト配信</td></tr></table>
+
+    <div class="tip"><div class="tip-lbl">💡 SNS + SQS のファンアウトパターン</div>注文が入ったとき「在庫を減らす」「メールを送る」「ログを記録する」を並列で行いたい場合、SNSトピックに発行し、それぞれのSQSキューが受け取って処理するパターンが定番です。各処理が独立しているため、1つが失敗しても他に影響しません。</div>
+  `},
+  {id:'ar-13',icon:'🚪',title:'⑬ APIの玄関口 — Amazon API Gateway',lead:'Lambdaなどのバックエンドをインターネットに公開するためのマネージドAPIサービスです',html:`
+    <p class="a-p"><strong>API Gateway</strong>はHTTPリクエストを受け取り、Lambda・EC2・外部サービスなどのバックエンドに転送するマネージドサービスです。認証・レート制限・ロギングなどAPI運用に必要な機能をまとめて提供します。</p>
+    <div class="analogy"><div class="analogy-lbl">💡 わかりやすい例え</div>API Gatewayは「ホテルのフロント」です。宿泊客（APIリクエスト）を受け付け、予約確認（認証）、部屋への案内（ルーティング）、サービスの調整（レート制限）をすべてフロントが担当します。裏方（Lambda）は直接客と話さなくてよい仕組みです。</div>
+
+    <div class="a-h3">API Gatewayの主な機能</div>
+    <div class="steps">
+      <div class="step"><div class="step-n">🔀</div><div class="step-body"><div class="step-t">ルーティング</div><div class="step-d">URLパスとHTTPメソッド（GET/POST/PUT/DELETE）の組み合わせで、どのバックエンドに転送するかを定義する</div></div></div>
+      <div class="step"><div class="step-n">🔒</div><div class="step-body"><div class="step-t">認証・認可</div><div class="step-d">IAM認証・Cognito・Lambdaオーソライザーを使ってリクエストを検証。無効なリクエストはバックエンドに到達させない</div></div></div>
+      <div class="step"><div class="step-n">🚦</div><div class="step-body"><div class="step-t">レート制限（スロットリング）</div><div class="step-d">1秒あたりのリクエスト数を制限して、バックエンドの過負荷を防ぐ。DDoS対策にもなる</div></div></div>
+      <div class="step"><div class="step-n">📋</div><div class="step-body"><div class="step-t">ロギング・モニタリング</div><div class="step-d">すべてのAPIコールをCloudWatchに記録。レスポンスタイム・エラー率などを可視化できる</div></div></div>
+    </div>
+
+    <div class="a-h3">API Gatewayの3つのタイプ</div>
+    <table class="tbl"><tr><th>タイプ</th><th>特徴</th><th>向いている用途</th></tr>
+    <tr><td><strong>REST API</strong></td><td>フル機能。APIキー・使用量プラン・カスタムドメイン対応</td><td>外部公開API・きめ細かい制御が必要なAPI</td></tr>
+    <tr><td><strong>HTTP API</strong></td><td>軽量・低コスト（REST APIの約70%安）。主要機能に絞った設計</td><td>LambdaやURLへのシンプルなプロキシ</td></tr>
+    <tr><td><strong>WebSocket API</strong></td><td>双方向リアルタイム通信を管理</td><td>チャット・ゲーム・リアルタイム通知</td></tr></table>
+
+    <div class="a-h3">Lambda + API Gateway の典型構成</div>
+    <div class="steps">
+      <div class="step"><div class="step-n">①</div><div class="step-body"><div class="step-t">クライアントがHTTPSリクエストを送信</div><div class="step-d">例：<span class="kw">GET https://api.example.com/users/123</span></div></div></div>
+      <div class="step"><div class="step-n">②</div><div class="step-body"><div class="step-t">API Gatewayが受け取り、認証・検証</div><div class="step-d">Cognitoトークンを確認して正規ユーザーか検証する</div></div></div>
+      <div class="step"><div class="step-n">③</div><div class="step-body"><div class="step-t">Lambda関数を呼び出す</div><div class="step-d">リクエストの情報（パス・クエリ・ボディ）をLambdaに渡す</div></div></div>
+      <div class="step"><div class="step-n">④</div><div class="step-body"><div class="step-t">Lambdaが処理してレスポンスを返す</div><div class="step-d">DynamoDBからデータを取得してJSON形式で返す</div></div></div>
+      <div class="step"><div class="step-n">⑤</div><div class="step-body"><div class="step-t">API Gatewayがクライアントに返す</div><div class="step-d">HTTPステータスコード・ヘッダーを付けてクライアントに返却する</div></div></div>
+    </div>
+
+    <div class="tip"><div class="tip-lbl">💡 サーバーレスAPIの利点</div>API Gateway + Lambda の構成はサーバーの管理が不要で、リクエストがないときのコストがほぼゼロです。急なアクセス増にも自動でスケールします。小規模なAPIから始めて、成長しても追加コストなしでスケールできる点が大きな強みです。</div>
+  `},
+  {id:'ar-14',icon:'📦',title:'⑭ コンテナ入門 — ECS & Fargate',lead:'「動く環境ごとパッケージして配る」コンテナ技術とAWSでの活用法を解説します',html:`
+    <p class="a-p"><strong>コンテナ</strong>とは、アプリとその実行に必要なライブラリ・設定をひとまとめにして、どこでも同じように動かせるようにパッケージ化する技術です。「自分のPCでは動くのに本番では動かない」という問題を解決します。</p>
+    <div class="analogy"><div class="analogy-lbl">💡 わかりやすい例え</div>コンテナは「弁当箱」です。料理（アプリ）だけでなく、箸・おかずカップ・仕切り（必要なライブラリ・設定）もすべて入っています。どこに持って行っても（どのサーバーでも）同じように食べられます。</div>
+
+    <div class="a-h3">仮想マシン（EC2）とコンテナの違い</div>
+    <table class="tbl"><tr><th></th><th>仮想マシン（EC2）</th><th>コンテナ</th></tr>
+    <tr><td>単位</td><td>OS全体を含む仮想サーバー</td><td>アプリ＋ライブラリのみ</td></tr>
+    <tr><td>起動時間</td><td>数十秒〜数分</td><td>数秒以内</td></tr>
+    <tr><td>サイズ</td><td>GB単位</td><td>MB〜数百MB単位</td></tr>
+    <tr><td>OS</td><td>各VMが独自のOSを持つ</td><td>ホストOSのカーネルを共有</td></tr>
+    <tr><td>密度</td><td>1台のサーバーに数台〜十数台</td><td>1台のサーバーに数十〜数百個</td></tr></table>
+
+    <div class="a-h3">Dockerの基本概念</div>
+    <p class="a-p">コンテナの事実上の標準が<strong>Docker</strong>です。</p>
+    <table class="tbl"><tr><th>用語</th><th>説明</th><th>例え</th></tr>
+    <tr><td><strong>Dockerfile</strong></td><td>コンテナイメージの作り方を記述したレシピ</td><td>弁当の作り方レシピ</td></tr>
+    <tr><td><strong>イメージ</strong></td><td>Dockerfileからビルドした実行可能なテンプレート</td><td>冷凍弁当（加熱前）</td></tr>
+    <tr><td><strong>コンテナ</strong></td><td>イメージを実行した実体</td><td>弁当を温めて食べている状態</td></tr>
+    <tr><td><strong>レジストリ</strong></td><td>イメージを保存・配布する場所</td><td>冷凍弁当のカタログ倉庫（ECR）</td></tr></table>
+
+    <div class="a-h3">Amazon ECS — コンテナオーケストレーション</div>
+    <p class="a-p">ECS（Elastic Container Service）は、複数のコンテナを管理・スケールするAWSのサービスです。「どのコンテナを・何台・どのサーバーで動かすか」を自動で管理します。</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">📋</div><div class="step-body"><div class="step-t">タスク定義</div><div class="step-d">使うコンテナイメージ・CPU・メモリ・環境変数などを定義した設計書。「このコンテナをこの設定で動かす」という宣言</div></div></div>
+      <div class="step"><div class="step-n">⚙️</div><div class="step-body"><div class="step-t">サービス</div><div class="step-d">タスクを指定した台数で常時稼働させる仕組み。コンテナが落ちると自動で再起動。ALBと連携して負荷分散も可能</div></div></div>
+      <div class="step"><div class="step-n">🏗️</div><div class="step-body"><div class="step-t">クラスター</div><div class="step-d">タスクを実行するサーバー（EC2またはFargate）のグループ。ECSはクラスター上でタスクをスケジューリングする</div></div></div>
+    </div>
+
+    <div class="a-h3">AWS Fargate — サーバーレスコンテナ</div>
+    <p class="a-p">Fargateを使うとコンテナを動かすサーバー（EC2）の管理が不要になります。コンテナの定義だけ書けば、AWSがサーバーを自動で確保・管理します。</p>
+    <table class="tbl"><tr><th></th><th>ECS on EC2</th><th>ECS on Fargate</th></tr>
+    <tr><td>サーバー管理</td><td>EC2の運用が必要</td><td>不要（AWSが管理）</td></tr>
+    <tr><td>コスト</td><td>EC2の固定費用</td><td>コンテナ実行時間で従量課金</td></tr>
+    <tr><td>向いている用途</td><td>GPUが必要・コストを最適化したい</td><td>シンプルに始めたい・小〜中規模</td></tr></table>
+
+    <div class="tip"><div class="tip-lbl">☁️ ECS・EC2・Lambdaの使い分け</div>
+    <strong>Lambda</strong>：短時間（最大15分）・イベント駆動の処理。常時稼働不要でコスト最小。<br>
+    <strong>ECS + Fargate</strong>：Webサーバーなど常時稼働が必要な処理。Dockerコンテナで動かしたいアプリ。<br>
+    <strong>EC2</strong>：特殊なOSやGPUが必要、既存の構成をそのまま動かしたい場合。
+    </div>
   `},
 ];
 
@@ -801,4 +999,12 @@ const TERMS = {
   proxy:      {w:'プロキシサーバー',   b:'クライアントとサーバーの間に立って通信を<strong>代理で中継</strong>するサーバー。クライアント側に置く「フォワードプロキシ」とサーバー側に置く「リバースプロキシ」がある。キャッシュ・フィルタリング・負荷分散・セキュリティ強化などに活用される。'},
   server:     {w:'サーバー',          b:'ネットワーク上で他のコンピューター（クライアント）からのリクエストを受け取り、処理結果（レスポンス）を返すコンピューターまたはソフトウェア。役割によってWebサーバー・DBサーバー・メールサーバーなどに分類される。AWSではEC2が仮想サーバーに相当する。'},
   client:     {w:'クライアント',      b:'サーバーにサービスを<strong>要求する側</strong>のコンピューターやアプリケーション。Webブラウザはクライアントの代表例で、WebサーバーにHTTPリクエストを送りHTMLを受け取る。'},
+  vlan:       {w:'VLAN',              b:'<strong>Virtual LAN</strong>の略。物理的な配線を変えずにスイッチの設定だけでLANを論理的に分割する技術。部門ごとにVLANを分けることでセキュリティを高め、ブロードキャストの範囲を制限できる。'},
+  cidr:       {w:'CIDR',              b:'<strong>Classless Inter-Domain Routing</strong>の略。IPアドレスの範囲を「10.0.0.0/24」のように表記する方式。スラッシュ後の数字がネットワーク部のビット数を表し、/24なら254台のホストが使用可能。'},
+  sqs:        {w:'Amazon SQS',        b:'<strong>Simple Queue Service</strong>の略。送信者が入れたメッセージを受信者が取り出して処理するマネージドキューサービス。送受信者が非同期で動作できるため、障害耐性の高いアーキテクチャを実現できる。'},
+  sns:        {w:'Amazon SNS',        b:'<strong>Simple Notification Service</strong>の略。1つのトピックにメッセージを発行すると、購読しているすべての宛先（SQS・Lambda・メールなど）に同時に配信するPub/Subサービス。'},
+  container:  {w:'コンテナ',          b:'アプリと実行に必要なライブラリ・設定をひとまとめにしてパッケージ化する技術。どのサーバーでも同じ環境で動かせる。仮想マシンよりも軽量・高速で起動できる。Dockerが事実上の標準。'},
+  ecs:        {w:'Amazon ECS',        b:'<strong>Elastic Container Service</strong>の略。Dockerコンテナを管理・スケールするAWSのオーケストレーションサービス。EC2またはFargate上でコンテナを実行する。'},
+  fargate:    {w:'AWS Fargate',       b:'ECSやEKSでコンテナを動かす際に、サーバー（EC2）の管理を不要にするサーバーレスコンピューティングエンジン。コンテナの定義だけ書けばAWSがインフラを管理し、実行時間で従量課金される。'},
+  apigw:      {w:'API Gateway',       b:'HTTPリクエストを受け取りLambdaやEC2などのバックエンドに転送するマネージドAPIサービス。認証・レート制限・ロギングなどAPI運用に必要な機能を提供する。'},
 };
