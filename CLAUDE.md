@@ -291,6 +291,14 @@ git push origin master
 
 ---
 
+## ブランチ運用ルール
+
+- **プッシュは必ず `master` ブランチに行う**
+- GitHub Pages は `master` ブランチを配信しているため、`main` だけにプッシュしても反映されない
+- コマンド例：`git push origin master` または `git push origin main:master`
+
+---
+
 ## コミュニケーション
 
 - ユーザーへの確認・質問・コマンド実行前の確認はすべて**日本語**で行う
