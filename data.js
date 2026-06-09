@@ -117,6 +117,21 @@ const QUIZ = [
   {q:'DynamoDBのデータベースモデルは？',opts:['リレーショナル（SQL）','NoSQL（キー・バリュー型＋ドキュメント型）','グラフDB','カラム型DB'],ans:1,exp:'<span class="term" data-term="dynamodb"><strong>DynamoDB</strong></span>はフルマネージドNoSQL。ミリ秒以下のレイテンシーと自動スケーリングが特徴。',genre:'aws'},
   {q:'AWS WAFが主に防ぐ攻撃は？',opts:['DDoS（大量リクエスト）','SQLiやXSSなどのWebアプリ攻撃','内部ネットワーク侵入','ランサムウェア'],ans:1,exp:'<strong>WAF</strong>はHTTPリクエストを検査しSQLインジェクション・XSSを防ぎます。CloudFront・ALBと統合。',genre:'mixed'},
   {q:'EBSとS3の主な違いは？',opts:['EBSはEC2にアタッチするブロックストレージ・S3はオブジェクトストレージ','どちらも同じ用途','S3はEC2にアタッチできる','EBSのみ暗号化できる'],ans:0,exp:'<strong>EBS</strong>はEC2アタッチ型ブロックストレージ（仮想SSD）。<strong>S3</strong>はHTTP経由のオブジェクトストレージ。',genre:'aws'},
+  {q:'VPNの主な目的として正しいものは？',opts:['ファイルを圧縮して転送する','インターネット上に暗号化トンネルを作り安全に通信する','IPアドレスを自動割り当てする','パケットの転送経路を最適化する'],ans:1,exp:'<strong>VPN（Virtual Private Network）</strong>は公共のインターネット上に暗号化されたトンネルを作り、安全に通信する技術です。',genre:'net'},
+  {q:'本社と支社を常時VPN接続する場合に使う方式は？',opts:['クライアントVPN（リモートアクセス）','サイト間VPN（Site-to-Site）','SSL/TLS','DNS over HTTPS'],ans:1,exp:'<strong>サイト間VPN</strong>は拠点のVPNルーター同士がトンネルを確立して常時接続します。個人PCの接続はクライアントVPNを使います。',genre:'net'},
+  {q:'TLS（SSL）の主な役割は？',opts:['IPアドレスを暗号化する','MACアドレスを隠蔽する','通信データを暗号化して盗聴・改ざんを防ぐ','パケットの転送経路を決める'],ans:2,exp:'<strong>TLS</strong>は通信を暗号化して盗聴・改ざんを防ぐプロトコルです。HTTPSの「S」はTLSによるSecure（安全）を意味します。',genre:'net'},
+  {q:'公開鍵暗号の説明として正しいものは？',opts:['暗号化と復号に同じ鍵を使う（高速）','暗号化に公開鍵・復号に秘密鍵を使う（鍵管理が容易）','鍵を使わずにハッシュで暗号化する','AESアルゴリズムを使う方式'],ans:1,exp:'<strong>公開鍵暗号</strong>は公開鍵で暗号化・秘密鍵で復号します。公開鍵は公開してよく、秘密鍵だけを厳密に管理すればよいため鍵配送問題を解決します。',genre:'net'},
+  {q:'「10.0.0.0/16」のVPCで使用可能なIPアドレス数はいくつか？',opts:['254個','1,024個','65,534個','16,777,214個'],ans:2,exp:'<strong>/16</strong>はホスト部が16bit。2¹⁶=65,536のうちネットワークアドレスとブロードキャストを除いた<strong>65,534個</strong>が使用可能です。',genre:'net'},
+  {q:'SQSでメッセージの処理順序を厳密に保証したい場合に使うキュータイプは？',opts:['スタンダードキュー','FIFOキュー','デッドレターキュー','プライオリティキュー'],ans:1,exp:'<strong>FIFOキュー</strong>はFirst In First Outで順序を厳密に保証し、重複配信もありません。決済・在庫更新など順序が重要な処理に適します。',genre:'aws'},
+  {q:'Amazon SQSを使う主な目的として正しいものは？',opts:['リアルタイム動画配信','送信者と受信者を非同期に結合してシステムを疎結合にする','データベースのバックアップ','静的Webサイトのホスティング'],ans:1,exp:'<strong>SQS</strong>はキューで送受信者を非同期に結合します。受信者が止まってもメッセージが失われず、障害耐性の高いアーキテクチャを実現できます。',genre:'aws'},
+  {q:'Amazon SNSで1つのメッセージを複数の宛先に同時配信するパターンを何と呼ぶ？',opts:['スロットリング','ファンアウト','カナリアリリース','フェイルオーバー'],ans:1,exp:'<strong>ファンアウト</strong>はSNSトピックに1つ発行したメッセージを、購読している複数のSQSキュー・Lambda等に同時配信するパターンです。',genre:'aws'},
+  {q:'Amazon API Gatewayの主な役割として正しいものは？',opts:['データベースの管理','HTTPリクエストを受け取りLambdaなどのバックエンドに転送するAPIの玄関口','コンテナのオーケストレーション','ファイルストレージの提供'],ans:1,exp:'<strong>API Gateway</strong>はHTTPリクエストを受け取り、認証・レート制限を行った上でLambda・EC2などのバックエンドに転送するマネージドAPIサービスです。',genre:'aws'},
+  {q:'API GatewayにAPI呼び出し数の上限を設けてバックエンドを守る機能は？',opts:['キャッシュ','スロットリング（レート制限）','フェイルオーバー','オートスケーリング'],ans:1,exp:'<strong>スロットリング</strong>は1秒あたりのリクエスト数を制限して過負荷やDDoS攻撃からバックエンドを守る機能です。',genre:'aws'},
+  {q:'Amazon ECSの主な役割として正しいものは？',opts:['オブジェクトストレージの管理','Dockerコンテナのデプロイ・スケール・管理を行うオーケストレーション','DNSの名前解決','VPNの接続管理'],ans:1,exp:'<strong>ECS（Elastic Container Service）</strong>はDockerコンテナを管理・スケールするサービスです。タスク定義でコンテナの設定を定義し、サービスで台数を維持します。',genre:'aws'},
+  {q:'AWS Fargateを使うことで不要になるものは？',opts:['コンテナイメージの作成','コンテナを動かすサーバー（EC2）の管理','IAMロールの設定','VPCの設定'],ans:1,exp:'<strong>Fargate</strong>はサーバーレスのコンテナ実行環境。EC2のプロビジョニング・パッチ適用・スケール管理が不要になり、コンテナの定義だけに集中できます。',genre:'aws'},
+  {q:'コンテナと仮想マシン（EC2）の比較として正しいものは？',opts:['コンテナの方が起動に時間がかかる','コンテナは独自のOSカーネルを持つ','コンテナは仮想マシンより軽量で起動が速い','仮想マシンの方がリソース効率が高い'],ans:2,exp:'<strong>コンテナ</strong>はホストOSのカーネルを共有するため、仮想マシン（それぞれ独自OSを持つ）より軽量で数秒以内に起動できます。',genre:'aws'},
+  {q:'オンプレミスとAWS VPCをインターネット経由で暗号化接続するAWSサービスは？',opts:['Amazon CloudFront','AWS Site-to-Site VPN','Amazon S3 Transfer Acceleration','AWS Lambda'],ans:1,exp:'<strong>AWS Site-to-Site VPN</strong>はIPsecを使ってオンプレミスとVPCをインターネット経由で安全に接続します。専用線が不要でコストを抑えられます。',genre:'mixed'},
+  {q:'AWSでHTTPS通信のSSL/TLS証明書を無料で発行・管理するサービスは？',opts:['AWS KMS','AWS IAM','ACM（AWS Certificate Manager）','AWS Shield'],ans:2,exp:'<strong>ACM（AWS Certificate Manager）</strong>はSSL/TLS証明書を無料で発行・自動更新します。CloudFrontやALBにワンクリックで適用できます。',genre:'mixed'},
 ];
 
 // --- 読み物コンテンツ ---
